@@ -8,7 +8,7 @@ This repository contains a simple Tron AI environment where two players can comp
 Clone the repo:
 
 ```bash
-git clone git@github.com:cbasitodx/Tron-AI-Enviroment.git
+git clone git@github.com:jnegrete2005/hackatron.git
 cd tron-ai-environment
 ```
 
