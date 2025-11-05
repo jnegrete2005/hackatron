@@ -1,5 +1,5 @@
-from base.player import Player
-from base.consts import PLAYER_1, PLAYER_2, WALL, PLAYERS_COLLIDED, BOTH_WALLS
+from src.backend.player import Player
+from src.backend.consts import PLAYER_1, PLAYER_2, WALL, PLAYERS_COLLIDED, BOTH_WALLS
 
 
 class GameState:

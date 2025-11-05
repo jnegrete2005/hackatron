@@ -11,10 +11,3 @@ COLOR_P2_TRAIL = (255, 50, 50)  # Red
 COLOR_P2_HEAD = (255, 150, 150)  # Brighter Red/Pink
 
 COLOR_GAME_OVER_TEXT = (255, 255, 0)  # Yellow for win/loss text
-
-DIRECTION_VECTORS = {
-    1: (-1, 0),  # LEFT (dx, dy)
-    2: (0, -1),  # UP
-    3: (1, 0),   # RIGHT
-    4: (0, 1),   # DOWN
-}

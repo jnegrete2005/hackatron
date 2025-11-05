@@ -1,4 +1,4 @@
-from src.GameState import GameState
+from src.backend.GameState import GameState
 
 
 class BaseBot:

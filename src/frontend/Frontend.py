@@ -1,10 +1,10 @@
 import pygame
 
-from frontend.consts import *
+from src.frontend.consts import *
 
-from base.consts import PLAYER_1, PLAYER_2
-from base.player import Player
-from GameState import GameState
+from src.backend.consts import PLAYER_1, PLAYER_2
+from src.backend.player import Player
+from src.backend.GameState import GameState
 
 
 class Frontend:

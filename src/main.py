@@ -2,12 +2,11 @@ import asyncio
 
 import pygame
 
-from GameState import GameState
+from src.backend.GameState import GameState
+from src.backend.input import get_input
+from src.backend.player import Player
 
-from Frontend import Frontend
-
-from src.base.input import get_input
-from src.base.player import Player
+from src.frontend.Frontend import Frontend
 
 
 async def get_moves(game: GameState) -> tuple[tuple[int, int], tuple[int, int]]:
@@ -33,6 +32,9 @@ async def play(game: GameState, frontend: Frontend):
         game.tick(move_1, move_2)
         frontend.draw_game_board()
         await wait_for_keypress()
+
+    print("Game Over!")
+    print(f"Winner: {f'Player {game.winner.number}' if game.winner else 'Draw'}")
 
 
 async def wait_for_keypress():

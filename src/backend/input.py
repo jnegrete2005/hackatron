@@ -1,8 +1,8 @@
-from src.GameState import GameState
-from src.base.player import Player
+from src.backend.GameState import GameState
+from src.backend.player import Player
 
-from src.players.player_1.bot import Bot as PlayerOneBot
-from src.players.player_2.bot import Bot as PlayerTwoBot
+from src.bots.player_1.bot import Bot as PlayerOneBot
+from src.bots.player_2.bot import Bot as PlayerTwoBot
 
 
 async def get_input(player: Player, game: GameState) -> int:

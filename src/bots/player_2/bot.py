@@ -1,5 +1,5 @@
-from src.players.base import BaseBot, GameState
-from src.base.player import Player
+from src.bots.base import BaseBot, GameState
+from src.backend.player import Player
 
 from random import choice
 
