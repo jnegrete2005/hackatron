@@ -4,21 +4,48 @@ from .consts import PLAYER_1, PLAYER_2, N_STELLA, MOVE_DOWN, MOVE_LEFT, MOVE_RIG
 
 
 class Player:
+    """
+    Class representing a player in the game.
+    """
+
     def __init__(self, number: int, size: int):
+        """
+        Initializes the player with a number and an initial position.
+
+        :param number: The player number (1 or 2)
+        :type number: int
+        :param size: The size of the board
+        :type size: int
+        """
         self.__number: int = number
         self.__position: list[tuple[int, int]] = [self.__generate_initial_position(size)] + [None] * N_STELLA
         self.__previous_move: int = 0  # 0 means no previous move
 
     @property
     def number(self) -> int:
+        """
+        Get the player number.
+        :return: The player number
+        :rtype: int
+        """
         return self.__number
 
     @property
     def previous_move(self) -> int:
+        """
+        Get the previous move made by the player.
+        :return: The previous move
+        :rtype: int
+        """
         return self.__previous_move
 
     @property
     def position(self) -> list[tuple[int, int]]:
+        """
+        Get the current position of the player.
+        :return: The current position
+        :rtype: list[tuple[int, int]]
+        """
         return self.__position
 
     def __get_new_position(self, move: int) -> tuple[int, int]:
@@ -46,12 +73,26 @@ class Player:
 
     @staticmethod
     def is_valid_move(move: int) -> bool:
+        """
+        Check if the move is valid.
+        :param move: The move to check
+        :type move: int
+        :return: True if the move is valid, False otherwise
+        :rtype: bool
+        """
         if not isinstance(move, int):
             return False
 
         return 1 <= move <= 4
 
     def move(self, move: int) -> None:
+        """
+        Move the player in the given direction.
+        If the move is invalid, the player will use the previous move instead.
+
+        :param move: The move to make
+        :type move: int
+        """
         try:
             new_position = self.__get_new_position(move)
         except ValueError as e:

@@ -8,7 +8,21 @@ from src.backend.GameState import GameState
 
 
 class Frontend:
+    """
+    Class responsible for rendering the Tron game using Pygame.
+    """
+
     def __init__(self, game: GameState, cell_size: int, caption: str = "Tron Game"):
+        """
+        Initializes the Frontend with the game state, cell size, and window caption.
+
+        :param game: The current game state.
+        :type game: GameState
+        :param cell_size: The size of each cell in the grid.
+        :type cell_size: int
+        :param caption: The caption for the game window.
+        :type caption: str
+        """
         pygame.init()
         self.game = game
 

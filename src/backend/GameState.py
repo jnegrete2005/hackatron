@@ -3,6 +3,10 @@ from src.backend.consts import PLAYER_1, PLAYER_2, WALL, PLAYERS_COLLIDED, BOTH_
 
 
 class GameState:
+    """
+    Represents the state of the game, including the players, board, walls, and game status.
+    """
+
     def __init__(
         self,
         size: int,
@@ -10,6 +14,18 @@ class GameState:
         player_2: Player | None = None,
         board: list[list[int]] | None = None
     ):
+        """
+        Initializes the game state with the given size, players, and board.
+
+        :param size: The size of the game board
+        :type size: int
+        :param player_1: The first player
+        :type player_1: Player | None
+        :param player_2: The second player
+        :type player_2: Player | None
+        :param board: The game board
+        :type board: list[list[int]] | None
+        """
         self.__size: int = size
 
         # Save the players' info
@@ -30,30 +46,72 @@ class GameState:
 
     @property
     def size(self) -> int:
+        """
+        Get the size of the game board.
+
+        :return: The size of the board
+        :rtype: int
+        """
         return self.__size
 
     @property
     def player_1(self) -> Player:
+        """
+        Get the player 1 object.
+
+        :return: The player 1
+        :rtype: Player
+        """
         return self.__player_1
 
     @property
     def player_2(self) -> Player:
+        """
+        Get the player 2 object.
+
+        :return: The player 2
+        :rtype: Player
+        """
         return self.__player_2
 
     @property
     def board(self) -> list[list[int]]:
+        """
+        Get the current game board.
+
+        :return: The game board
+        :rtype: list[list[int]]
+        """
         return self.__board
 
     @property
     def walls(self) -> set[tuple[int, int]]:
+        """
+        Get the walls of the game board.
+
+        :return: The walls
+        :rtype: set[tuple[int, int]]
+        """
         return self.__walls
 
     @property
     def game_over(self) -> bool:
+        """
+        Check if the game is over.
+
+        :return: True if the game is over, False otherwise
+        :rtype: bool
+        """
         return self.__game_over
 
     @property
     def winner(self) -> Player | None:
+        """
+        Get the winner of the game, if there is one.
+
+        :return: The winner player or None if there is no winner
+        :rtype: Player | None
+        """
         return self.__winner
 
     def __init_walls(self) -> None:
@@ -148,6 +206,10 @@ class GameState:
     def tick(self, move_1: int, move_2: int) -> None | int:
         """
         Process a game tick with the given moves for both players.
+        1. Move both players.
+        2. Check for collisions.
+        3. Update the game board.
+
         :param move_1: Move for player 1.
         :type move_1: int
         :param move_2: Move for player 2.

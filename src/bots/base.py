@@ -1,8 +1,15 @@
 from src.backend.GameState import GameState
+from src.backend.player import Player
 
 
 class BaseBot:
-    def __init__(self):
+    """
+    Base class for the bots that will play the Tron game.
+
+    Your bot **must** inherit from this class and implement the `get_move` method.
+    """
+
+    def __init__(self, player: Player | None = None, game_state: GameState | None = None):
         pass
 
     def get_move(self, game_state: GameState) -> int:

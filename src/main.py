@@ -10,6 +10,15 @@ from src.frontend.Frontend import Frontend
 
 
 async def get_moves(game: GameState) -> tuple[tuple[int, int], tuple[int, int]]:
+    """
+    Get moves from both players concurrently.
+
+    :param game: The current game state.
+    :type game: GameState
+
+    :return: A tuple containing the moves of player 1 and player 2.
+    :rtype: tuple[tuple[int, int], tuple[int, int]]
+    """
     player_1 = game.player_1
     player_2 = game.player_2
 
@@ -27,6 +36,14 @@ async def get_moves(game: GameState) -> tuple[tuple[int, int], tuple[int, int]]:
 
 
 async def play(game: GameState, frontend: Frontend):
+    """
+    Play the game until it's over.
+
+    :param game: The current game state.
+    :type game: GameState
+    :param frontend: The frontend to draw the game board.
+    :type frontend: Frontend
+    """
     while not game.game_over:
         move_1, move_2 = await get_moves(game)
         game.tick(move_1, move_2)
@@ -47,6 +64,9 @@ async def wait_for_keypress():
 
 
 async def main():
+    """
+    Initialize the game and frontend, then start playing.
+    """
     game = GameState(16)
     frontend = Frontend(game, 30)
 
