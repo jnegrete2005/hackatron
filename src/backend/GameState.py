@@ -114,6 +114,33 @@ class GameState:
         """
         return self.__winner
 
+    def serialize_for_player(self, player_number: int) -> dict:
+        """
+        Serializa el estado del juego desde la perspectiva
+        del jugador especificado.
+
+        :param player_number: El número del jugador (PLAYER_1 o PLAYER_2)
+        :type player_number: int
+
+        :return: El estado del juego serializado para ese jugador.
+        :rtype: dict
+        """
+        if player_number == PLAYER_1:
+            me_player = self.player_1
+            opponent_player = self.player_2
+        elif player_number == PLAYER_2:
+            me_player = self.player_2
+            opponent_player = self.player_1
+        else:
+            raise ValueError("Número de jugador no válido")
+
+        return {
+            "board_size": self.size,
+            "me": me_player.serialize(),
+            "opponent": opponent_player.serialize(),
+            "board": self.board,
+        }
+
     def __init_walls(self) -> None:
         """
         Initialize the walls of the game board.

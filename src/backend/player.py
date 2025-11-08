@@ -48,6 +48,26 @@ class Player:
         """
         return self.__position
 
+    def serialize(self) -> dict:
+        """
+        Serialize the player object to a dictionary.
+
+        :return: The serialized player
+        :rtype: dict
+        """
+        trail = [
+            {"x": pos[0], "y": pos[1]}
+            for pos in self.position
+            if pos is not None
+        ]
+        head = trail[0] if trail else None
+
+        return {
+            "head": head,
+            "trail": trail,
+            "previous_move": self.__previous_move,
+        }
+
     def __get_new_position(self, move: int) -> tuple[int, int]:
         """
         Calculate the new position of the player based on the move
@@ -95,9 +115,13 @@ class Player:
         """
         try:
             new_position = self.__get_new_position(move)
-        except ValueError as e:
-            new_position = self.__get_new_position(self, self.__previous_move)
-            print(f"Invalid move {move} for player {self.__number}. Using previous move instead: {self.__previous_move}. Error: {e}")
+        except Exception as e:
+            if self.__previous_move == 0:
+                new_position = self.__get_new_position(MOVE_UP)
+                print(f"Invalid move {move} for player {self.__number}. No previous move available, using MOVE_UP instead. Error: {e}")
+            else:
+                new_position = self.__get_new_position(self.__previous_move)
+                print(f"Invalid move {move} for player {self.__number}. Using previous move instead: {self.__previous_move}. Error: {e}")
 
         self.__position = [new_position] + self.__position[:-1]
         self.__previous_move = move
