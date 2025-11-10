@@ -47,7 +47,7 @@ async def get_moves(
     return move_1, move_2
 
 
-async def play(game: GameState, frontend: Frontend, bot_1: asyncio.subprocess.Process, bot_2: asyncio.subprocess.Process):
+async def play(game: GameState, frontend: Frontend, bot_1: asyncio.subprocess.Process, bot_2: asyncio.subprocess.Process, auto_mode: bool) -> None:
     """
     Play the game until it's over.
 
@@ -64,7 +64,10 @@ async def play(game: GameState, frontend: Frontend, bot_1: asyncio.subprocess.Pr
         move_1, move_2 = await get_moves(game, bot_1, bot_2)
         game.tick(move_1, move_2)
         frontend.draw_game_board()
-        await wait_for_keypress()
+        if not auto_mode:
+            await wait_for_keypress()
+        else:
+            await asyncio.sleep(0.1)
 
     print("Game Over!")
     print(f"Winner: {f'Player {game.winner.number}' if game.winner else 'Draw'}")
@@ -83,7 +86,7 @@ async def main():
     """
     Initialize the game and frontend, then start playing.
     """
-    bot_1_image, bot_2_image = get_bot_args()
+    bot_1_image, bot_2_image, auto_mode = get_bot_args()
     bot_1, bot_2 = await launch_bots(bot_1_image, bot_2_image)
 
     if bot_1 is None or bot_2 is None:
@@ -96,7 +99,7 @@ async def main():
     frontend.draw_game_board()
 
     try:
-        await play(game, frontend, bot_1, bot_2)
+        await play(game, frontend, bot_1, bot_2, auto_mode)
     except Exception as e:
         print(f"Error occurred while playing: {e}")
     finally:

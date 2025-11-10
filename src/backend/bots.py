@@ -16,8 +16,13 @@ def get_bot_args():
         default="random-bot:latest",
         help="Docker image for Bot 2"
     )
+    parser.add_argument(
+        "--auto",
+        action="store_true",
+        help="Run the game in automatic mode without waiting for keypresses"
+    )
     args = parser.parse_args()
-    return args.bot1, args.bot2
+    return args.bot1, args.bot2, args.auto
 
 
 async def launch_bots(bot_1_image: str, bot_2_image: str) -> tuple[asyncio.subprocess.Process | None, asyncio.subprocess.Process | None]:
