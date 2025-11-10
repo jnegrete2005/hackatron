@@ -39,12 +39,12 @@ set PYTHONPATH=%cd%\src;%PYTHONPATH%
 
 To run a game, you must provide the server with the Docker images for the two competing bots.
 
-The `main.py` script accepts two arguments: `--bot1` and `--bot2`, which are the Docker image names of the bots. By default, it uses the random bot image from Docker Hub.
+The `main.py` script accepts two arguments: `--bot1` and `--bot2`, which are the Docker image names of the bots. By default, it uses the [random bot image](https://hub.docker.com/r/jokkess/hackatron-random-bot) from Docker Hub.
 
 To run a local game between your bot and the random bot, use the following command:
 
 ```bash
-python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --bot2 jnegrete2005/hackatron-random-bot
+python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --bot2 jokkess/hackatron-random-bot
 ```
 
 Replace `<YOUR_DOCKER_IMAGE>` with the name of your bot's Docker image.
@@ -61,3 +61,9 @@ However, if you want to run the game automatically without waiting for key press
 ```bash
 python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --auto
 ```
+
+---
+
+## 🏆 Good luck, and may the best bot win!
+
+Made with ❤️ by the HackaTron Team

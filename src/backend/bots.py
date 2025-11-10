@@ -7,13 +7,13 @@ def get_bot_args():
     parser.add_argument(
         "--bot1",
         type=str,
-        default="random-bot:latest",
+        default="jokkess/hackatron-random-bot",
         help="Docker image for Bot 1"
     )
     parser.add_argument(
         "--bot2",
         type=str,
-        default="random-bot:latest",
+        default="jokkess/hackatron-random-bot",
         help="Docker image for Bot 2"
     )
     parser.add_argument(
