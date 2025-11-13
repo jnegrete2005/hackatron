@@ -1,5 +1,5 @@
 from src.backend.player import Player
-from src.backend.consts import PLAYER_1, PLAYER_2, WALL, PLAYERS_COLLIDED, BOTH_WALLS
+from src.backend.consts import PLAYER_1, PLAYER_2, WALL, PLAYERS_COLLIDED, BOTH_DEAD
 
 
 class GameState:
@@ -175,12 +175,20 @@ class GameState:
             return PLAYERS_COLLIDED
 
         elif player_1.position[0] in self.walls and player_2.position[0] in self.walls:
-            return BOTH_WALLS
+            return BOTH_DEAD
 
         elif player_1.position[0] in player_2.position or player_1.position[0] in self.walls:
             return player_2
 
         elif player_2.position[0] in player_1.position or player_2.position[0] in self.walls:
+            return player_1
+
+        # Check for suicides
+        elif player_1.player_suicided() and player_2.player_suicided():
+            return BOTH_DEAD
+        elif player_1.player_suicided():
+            return player_2
+        elif player_2.player_suicided():
             return player_1
 
         return None
@@ -199,7 +207,7 @@ class GameState:
 
         if collision == PLAYERS_COLLIDED:
             self.__winner = None
-        elif collision == BOTH_WALLS:
+        elif collision == BOTH_DEAD:
             self.__winner = None
         else:
             self.__winner = collision

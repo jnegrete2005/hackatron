@@ -58,9 +58,9 @@ async def get_moves(
         player_2_input.get_move(state_for_p2)
     )
 
-    if not Player.is_valid_move(move_1) or player_1.player_suicided(move_1):
+    if not Player.is_valid_move(move_1):
         move_1 = player_1.previous_move
-    if not Player.is_valid_move(move_2) or player_2.player_suicided(move_2):
+    if not Player.is_valid_move(move_2):
         move_2 = player_2.previous_move
 
     return move_1, move_2

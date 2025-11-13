@@ -165,25 +165,14 @@ class Player:
 
         return row, col
 
-    def player_suicided(self, new_move: int) -> bool:
+    def player_suicided(self) -> bool:
         """
         Check if the player suicided
 
         :return: True if the player suicided, False otherwise
         :rtype: bool
         """
-        # Use int() to avoid errors
-        match self.__previous_move:
-            case 1:  # MOVE_LEFT
-                return new_move == MOVE_RIGHT
-            case 2:  # MOVE_UP
-                return new_move == MOVE_DOWN
-            case 3:  # MOVE_RIGHT
-                return new_move == MOVE_LEFT
-            case 4:  # MOVE_DOWN
-                return new_move == MOVE_UP
-            case _:
-                return False
+        return self.position[0] in self.position[1:]
 
 
 class InvalidPlayerNumberError(Exception):

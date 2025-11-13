@@ -14,4 +14,4 @@ MOVE_DOWN = 4
 
 # Collisions
 PLAYERS_COLLIDED = 0  # Both players collided into each other
-BOTH_WALLS = 3        # Both players collided into a wall
+BOTH_DEAD = 3        # Both players collided into a wall
