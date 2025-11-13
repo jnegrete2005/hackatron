@@ -2,41 +2,60 @@ import asyncio
 import json
 import pygame
 
-from src.backend.bots import launch_bots, get_bot_args, terminate_bots
+from src.backend.args import get_args
 from src.backend.consts import PLAYER_1, PLAYER_2
 from src.backend.GameState import GameState
-from src.backend.input import get_input
 from src.backend.player import Player
+
+from src.backend.players.player_input import IPlayerType
+from src.backend.players.bot_player import BotPlayer
+from src.backend.players.human_player import HumanPlayer
 
 from src.frontend.Frontend import Frontend
 
 
+def create_player(bot_image: str | None, is_manual: bool) -> IPlayerType:
+    """
+    Create a player instance based on whether it's manual or bot.
+
+    :param bot_image: The Docker image for the bot player.
+    :type bot_image: str | None
+    :param is_manual: Flag indicating if the player is manual.
+    :type is_manual: bool
+    :return: An instance of IPlayerType (either HumanPlayer or BotPlayer).
+    :rtype: IPlayerType
+    """
+    if is_manual:
+        return HumanPlayer()
+
+    return BotPlayer(bot_image)
+
+
 async def get_moves(
     game: GameState,
-    bot_1: asyncio.subprocess.Process,
-    bot_2: asyncio.subprocess.Process
+    player_1_input: IPlayerType,
+    player_2_input: IPlayerType
 ) -> tuple[tuple[int, int], tuple[int, int]]:
     """
     Get moves from both players concurrently.
 
     :param game: The current game state.
     :type game: GameState
-    :param bot_1: The subprocess handle for bot 1.
-    :type bot_1: asyncio.subprocess.Process
-    :param bot_2: The subprocess handle for bot 2.
-    :type bot_2: asyncio.subprocess.Process
-
+    :param player_1: The player 1 instance
+    :type player_1: IPlayerType
+    :param player_2: The player 2 instance
+    :type player_2: IPlayerType
     :return: A tuple containing the moves of player 1 and player 2.
     :rtype: tuple[tuple[int, int], tuple[int, int]]
     """
     player_1, player_2 = game.player_1, game.player_2
 
-    state_for_p1 = game.serialize_for_player(PLAYER_1)
-    state_for_p2 = game.serialize_for_player(PLAYER_2)
+    state_for_p1 = json.dumps(game.serialize_for_player(PLAYER_1))
+    state_for_p2 = json.dumps(game.serialize_for_player(PLAYER_2))
 
     move_1, move_2 = await asyncio.gather(
-        get_input(json.dumps(state_for_p1), bot_1),
-        get_input(json.dumps(state_for_p2), bot_2)
+        player_1_input.get_move(state_for_p1),
+        player_2_input.get_move(state_for_p2)
     )
 
     if not Player.is_valid_move(move_1) or player_1.player_suicided(move_1):
@@ -47,7 +66,13 @@ async def get_moves(
     return move_1, move_2
 
 
-async def play(game: GameState, frontend: Frontend, bot_1: asyncio.subprocess.Process, bot_2: asyncio.subprocess.Process, auto_mode: bool) -> None:
+async def play(
+    game: GameState,
+    frontend: Frontend,
+    player_1_input: IPlayerType,
+    player_2_input: IPlayerType,
+    auto_mode: bool
+) -> None:
     """
     Play the game until it's over.
 
@@ -55,13 +80,17 @@ async def play(game: GameState, frontend: Frontend, bot_1: asyncio.subprocess.Pr
     :type game: GameState
     :param frontend: The frontend to draw the game board.
     :type frontend: Frontend
-    :param bot_1: The subprocess handle for bot 1.
-    :type bot_1: asyncio.subprocess.Process
-    :param bot_2: The subprocess handle for bot 2.
-    :type bot_2: asyncio.subprocess.Process
+    :param player_1: The player 1 instance
+    :type player_1: IPlayerType
+    :param player_2: The player 2 instance
+    :type player_2: IPlayerType
+    :param auto_mode: Flag indicating if the game should run in automatic mode.
+    :type auto_mode: bool
+    :return: None
+    :rtype: None
     """
     while not game.game_over:
-        move_1, move_2 = await get_moves(game, bot_1, bot_2)
+        move_1, move_2 = await get_moves(game, player_1_input, player_2_input)
         game.tick(move_1, move_2)
         frontend.draw_game_board()
         if not auto_mode:
@@ -86,12 +115,22 @@ async def main():
     """
     Initialize the game and frontend, then start playing.
     """
-    bot_1_image, bot_2_image, auto_mode = get_bot_args()
-    bot_1, bot_2 = await launch_bots(bot_1_image, bot_2_image)
+    bot_1_image, bot_2_image, auto_mode, manual1, manual2 = get_args()
 
-    if bot_1 is None or bot_2 is None:
-        print("Failed to launch bots. Exiting.")
-        await terminate_bots(bot_1, bot_2)
+    player_1_input: IPlayerType = create_player(bot_1_image, manual1)
+    player_2_input: IPlayerType = create_player(bot_2_image, manual2)
+
+    init_results = await asyncio.gather(
+        player_1_input.initialize(),
+        player_2_input.initialize()
+    )
+
+    if not all(init_results):
+        print("Failed to initialize players. Exiting.")
+        await asyncio.gather(
+            player_1_input.cleanup(),
+            player_2_input.cleanup()
+        )
         return
 
     game = GameState(16)
@@ -99,11 +138,15 @@ async def main():
     frontend.draw_game_board()
 
     try:
-        await play(game, frontend, bot_1, bot_2, auto_mode)
+        await play(game, frontend, player_1_input, player_2_input, auto_mode)
     except Exception as e:
         print(f"Error occurred while playing: {e}")
     finally:
-        await terminate_bots(bot_1, bot_2)
+        await asyncio.gather(
+            player_1_input.cleanup(),
+            player_2_input.cleanup()
+        )
+        pygame.quit()
 
 if __name__ == "__main__":
     asyncio.run(main())
