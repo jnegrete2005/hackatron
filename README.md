@@ -55,12 +55,19 @@ Or if you want, you can test your bot against itself:
 python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --bot2 <YOUR_DOCKER_IMAGE>
 ```
 
-The server will start a game. To continue to the next game tick, press any key on your keyboard.  
+The server will start a game. To continue to the next game tick, press any key on your keyboard *while having the game window focused*.  
 However, if you want to run the game automatically without waiting for key presses, you can use the `--auto` flag:
 
 ```bash
 python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --auto
 ```
+
+You can also play manually! Just use the `--manual<number>` flag, where `<number>` is either `1` or `2`, and that player will be controlled by you via keyboard input:
+
+```bash
+python3 src/main.py --bot1 <YOUR_DOCKER_IMAGE> --manual1 --auto
+```
+The console will display the controls for the manual player. (PD: I recommend using `--auto` as well to avoid having to press a key to continue each tick.)
 
 ---
 
